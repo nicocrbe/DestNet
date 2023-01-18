@@ -7,7 +7,7 @@
     "dev": "nodemon index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Nicolas Cristian Bellesi",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.1",
