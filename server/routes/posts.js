@@ -3,8 +3,8 @@ const {getPosts, createPost, updatePost, deletePost, likePost} = require("../con
 
 postRouter.get("/", getPosts)
 postRouter.post("/", createPost)
-postRouter.patch("/:id", updatePost)
+postRouter.put("/:id", updatePost)
 postRouter.delete("/:id", deletePost)
-postRouter.patch("/:id/likePost", likePost)
+postRouter.put("/:id/likepost", likePost)
 
 module.exports = postRouter

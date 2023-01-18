@@ -13,7 +13,7 @@ export const createPost = async(newPost) => {
 }
 
 export const updatePost = async(id,postToUpdate) => {
-    const updatedPost = await axios.patch(`${url}/${id}`, postToUpdate)
+    const updatedPost = await axios.put(`${url}/${id}`, postToUpdate)
     return updatedPost.data
 }
 
@@ -23,6 +23,6 @@ export const deletePost = async(id) => {
 }
 
 export const likePost = async(id) => {
-    const likedPost = await axios.update(`${url}/${id}/likePost`)
+    const likedPost = await axios.put(`${url}/${id}/likePost`)
     return likedPost.data
 }

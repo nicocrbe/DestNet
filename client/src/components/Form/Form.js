@@ -19,7 +19,7 @@ const Form = ({currentId, setCurrentId}) => {
     const classes = useStyles()
     const dispatch = useDispatch()
     const [postData, setPostData] = useState(initialPost)
-    const post = useSelector((state) => currentId ? state.posts.find((p) => p._id === currentId) : null)
+    const post = useSelector((state) => currentId ? state.posts.find((p) => p.id === currentId) : null)
 
     useEffect(()=> {
         if(post){

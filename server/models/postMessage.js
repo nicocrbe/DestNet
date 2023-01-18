@@ -12,7 +12,15 @@ const postSchema = new Schema({
     },
     cratedAt: {
         type: Date,
-        default: new Date()
+        default: Date.now()
+    }
+})
+
+postSchema.set("toJSON", {
+    transform: (document, returnedObject) => {
+        returnedObject.id = returnedObject._id,
+        delete returnedObject._id
+        delete returnedObject.__v
     }
 })
 

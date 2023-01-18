@@ -24,13 +24,14 @@ const createPost = async(req,res) => {
 }
 
 const updatePost = async(req,res) => {
-    const {id: _id} = req.params
-    const { post } = req.body
+    const {id} = req.params
+    const post = req.body
 
     try{
-        if(!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send("Not existing id")
+        if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send("Not existing id")
 
-        const updatedPost = await PostMessage.findByIdAndUpdate(_id, {...post, _id}, {new: true})
+        const updatedPost = await PostMessage.findByIdAndUpdate(id, {...post, id}, {new: true})
+        console.log("UPDATED")
         res.status(200).json(updatedPost)
     }catch(error){
         res.status(404).json({message: error.message})
@@ -38,11 +39,12 @@ const updatePost = async(req,res) => {
 }
 
 const deletePost = async(req,res) => {
-    const {id: _id} = req.params
+    const {id} = req.params
     
     try {
-        if(!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send("Not existing id")
-        await PostMessage.findByIdAndRemove(_id)
+        if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send("Not existing id")
+        await PostMessage.findByIdAndRemove(id)
+        console.log("DELETED")
         res.status(204).json({message: "Deleted succesfully"})
     } catch (error) {
         res.status(500).json({message: error.message})
@@ -50,12 +52,12 @@ const deletePost = async(req,res) => {
 }
 
 const likePost = async(req,res) => {
-    const {id: _id} = req.params
+    const {id} = req.params
     try {
-        if(!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send("Not existing id")
-        const currentPost = await PostMessage.findById(_id)
-        const likedPost = await PostMessage.findByIdAndUpdate(_id, { likeCounter: currentPost.likeCounter + 1}, {new: true})
-        res.status(201).json(updatedPost)
+        if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send("Not existing id")
+        const currentPost = await PostMessage.findById(id)
+        const likedPost = await PostMessage.findByIdAndUpdate(id, {likeCounter: currentPost.likeCounter + 1}, {new: true})
+        res.status(201).json(likedPost)
     } catch (error) {
         res.status(500).json({message: error.message})
     }

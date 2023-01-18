@@ -40,10 +40,10 @@ export const updatePost = (id,postToUpdate) => async(dispatch) => {
 
 export const deletePost = (id) => async(dispatch) => {
     try {
-        const data = await api.deletePost(id)
+        await api.deletePost(id)
         dispatch({
             type: "DELETE",
-            payload: data
+            payload: id
         })
     } catch (error) {
         console.error(error)      
