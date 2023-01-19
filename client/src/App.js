@@ -1,42 +1,25 @@
-import React, { useState, useEffect } from "react";
-import {Container, AppBar, Typography, Grow, Grid} from "@mui/material"
-import destnet from "./images/logo.png"
-import Posts from "./components/Posts/Posts"
-import Form from "./components/Form/Form"
-import useStyles from "./styles"
-
-import { getPosts } from "./actions/posts"
-import { useDispatch } from "react-redux";
+import {Container} from "@mui/material"
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import NavBar from "./components/NavBar/NavBar";
+import Home from "./components/Home/Home";
+import Auth from "./components/Auth/Auth";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const App = ()=> {
 
-    const [currentId, setCurrentId] = useState(null)
-    const classes = useStyles()
-    const dispatch = useDispatch()
-
-    useEffect(() => {
-        dispatch(getPosts())
-    }, [currentId, dispatch])
-
     return(
-        <Container maxWidth="lg">
-            <AppBar className={classes.appBar} position="static" color="inherit">
-                <Typography className={classes.heading} variant="h2" align="center">DestNet</Typography>
-                <img className={classes.image} src={destnet} alt="DestNet" height="60"></img>
-            </AppBar>
-            <Grow in>
-                <Container>
-                    <Grid container justify="space-between" alignItems="stretch" spacing={3}>
-                        <Grid item xs={12} sm={7}>
-                            <Posts setCurrentId={setCurrentId}/>
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                            <Form currentId={currentId} setCurrentId={setCurrentId}/>
-                        </Grid>
-                    </Grid>
+        <GoogleOAuthProvider clientId={`${process.env.REACT_APP_GOOGLE_CLIENT_ID}`}>
+            <BrowserRouter>
+                <Container maxWidth="lg">
+                    <NavBar />
+                    <Routes>
+                        <Route path="/" element={<Home />}/>
+                        <Route path="/auth" element={<Auth />}/>
+                    </Routes>
                 </Container>
-            </Grow>
-        </Container>
+            </BrowserRouter>
+        </GoogleOAuthProvider>
     )
 }
 

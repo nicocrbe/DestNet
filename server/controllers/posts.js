@@ -31,7 +31,6 @@ const updatePost = async(req,res) => {
         if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send("Not existing id")
 
         const updatedPost = await PostMessage.findByIdAndUpdate(id, {...post, id}, {new: true})
-        console.log("UPDATED")
         res.status(200).json(updatedPost)
     }catch(error){
         res.status(404).json({message: error.message})
@@ -44,7 +43,6 @@ const deletePost = async(req,res) => {
     try {
         if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send("Not existing id")
         await PostMessage.findByIdAndRemove(id)
-        console.log("DELETED")
         res.status(204).json({message: "Deleted succesfully"})
     } catch (error) {
         res.status(500).json({message: error.message})
