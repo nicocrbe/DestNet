@@ -3,14 +3,24 @@ import { AppBar, Avatar, Button, Toolbar, Typography } from "@mui/material"
 import useStyles from "./styles"
 import destnet from "../../images/logo.png"
 import {Link} from "react-router-dom"
+import jwt_decode from "jwt-decode"
 
 const NavBar = ()=> {
 
     const classes = useStyles()
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")))
+    const [user, setUser] = useState(null)
     
     useEffect(() => {
-        setUser(JSON.parse(localStorage.getItem("profile")))
+        const getGoogleUser = async(credential) => {
+            const decoded = await jwt_decode(credential)
+            return decoded
+        }
+        const userLogged = JSON.parse(localStorage.getItem("profile"))
+        if(userLogged){
+            getGoogleUser(userLogged?.credential).then(userResult => {
+                setUser(userResult)
+            })
+        }
     },[])
 
     const handleLogout = () => {

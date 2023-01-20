@@ -16,11 +16,12 @@ const Post = ({post, setCurrentId}) => {
 
     return (
         <Card className={classes.card}>
-            <CardMedia className={classes.media} image={file} title={title} />
+            <CardMedia className={classes.media} image={file} title={title} >
                 <div className={classes.overlay}>
                     <Typography variant="h6">{creator}</Typography>
                     <Typography variant="body2">{moment(createdAt).fromNow()}</Typography>
                 </div>
+                </CardMedia>
                 <div className={classes.overlay2}>
                     <Button style={{color: "white"}} size="small" onClick={() => setCurrentId(id)}>
                         <MoreHorizIcon fontSize="default" />
@@ -33,16 +34,16 @@ const Post = ({post, setCurrentId}) => {
                 <CardContent>
                     <Typography variant="body2" color="textSecondary" component="p" gutterBottom>{message}</Typography>
                 </CardContent>
-            <CardActions className={classes.cardActions}>
-                <Button size="small" color="primary" onClick={()=> dispatch(likePost(id))}>
-                    <ThumbUpAltIcon fontSize="small" />
-                    {` ${likeCounter} Likes `} 
-                </Button>
-                <Button size="small" color="primary" onClick={()=> dispatch(deletePost(id))}>
-                    <DeleteIcon fontSize="small" />
-                    Delete post
-                </Button>
-            </CardActions>
+                <CardActions className={classes.cardActions}>
+                    <Button size="small" color="primary" onClick={()=> dispatch(likePost(id))}>
+                        <ThumbUpAltIcon fontSize="small" />
+                        {` ${likeCounter} Likes `} 
+                    </Button>
+                    <Button size="small" color="primary" onClick={()=> dispatch(deletePost(id))}>
+                        <DeleteIcon fontSize="small" />
+                        Delete post
+                    </Button>
+                </CardActions>
         </Card>
     )
 }

@@ -2,11 +2,10 @@ import React, {useState} from "react";
 import { Avatar, Button, Paper, Grid, Typography, Container} from "@mui/material";
 import { GoogleLogin } from "@react-oauth/google";
 import useStyles from "./styles"
-import jwt_decode from "jwt-decode"
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {useDispatch} from "react-redux"
 import Input from "./Input";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, redirect } from "react-router-dom";
 
 const Auth = ()=> {
 
@@ -32,23 +31,18 @@ const Auth = ()=> {
         setIsSignup(!isSignup)
         setShowPassword(false)
     }
-    
-    const getGoogleUser = (credential) => {
-        const decoded = jwt_decode(credential)
-        return decoded
-    }
-
+   
     const onGoogleAuthSuccess = async(res)=> {
-        
-        const result = await getGoogleUser(res?.credential)
 
         try {
             dispatch({
                 type: "AUTH",
-                data: result
+                data: res
             })
-       
+        
         navigate("/")
+        window.location.reload(true)
+        
         } catch (error) {
             console.error(error)
         }
@@ -83,7 +77,7 @@ const Auth = ()=> {
                     <Button type="submit" fullWidth variant="contained" color="primary" >{isSignup ? "Sign up" : "Sign in"}</Button>
                     <GoogleLogin 
                         onSuccess={onGoogleAuthSuccess}
-                        onError={onGoogleAuthError}                     
+                        onError={onGoogleAuthError}                    
                    />
                     <Grid container justify="flex-end">
                         <Grid item>
