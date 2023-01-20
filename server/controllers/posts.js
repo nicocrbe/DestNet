@@ -13,7 +13,7 @@ const getPosts = async(req,res) => {
 
 const createPost = async(req,res) => {
     const postToAdd = req.body
-    const newPost = new PostMessage(postToAdd)
+    const newPost = new PostMessage({...postToAdd, creator: req.userId, createdAt: new Date().toISOString()})
 
     try{
         await newPost.save()
@@ -51,10 +51,21 @@ const deletePost = async(req,res) => {
 
 const likePost = async(req,res) => {
     const {id} = req.params
+
     try {
+        if(!req.userId) return res.json({message: "Unauthenticated"})
         if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send("Not existing id")
+        
         const currentPost = await PostMessage.findById(id)
-        const likedPost = await PostMessage.findByIdAndUpdate(id, {likeCounter: currentPost.likeCounter + 1}, {new: true})
+        const currentPostIndex = currentPost.likeCounter.findIndex((id) => id === String(req.userId))
+
+        if(currentPostIndex === -1){
+            currentPost.likeCounter.push(req.userId)
+        } else {
+            currentPost.likeCounter = currentPost.likeCounter.filter((id) => id !== String(req.userId))
+        }
+
+        const likedPost = await PostMessage.findByIdAndUpdate(id, currentPost, {new: true})
         res.status(201).json(likedPost)
     } catch (error) {
         res.status(500).json({message: error.message})

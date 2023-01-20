@@ -9,7 +9,6 @@ import { useSelector } from "react-redux";
 const Form = ({currentId, setCurrentId}) => {
 
     const initialPost = {
-        creator: "",
         title: "",
         message: "",
         hashtags: [],
@@ -20,7 +19,8 @@ const Form = ({currentId, setCurrentId}) => {
     const dispatch = useDispatch()
     const [postData, setPostData] = useState(initialPost)
     const post = useSelector((state) => currentId ? state.posts.find((p) => p.id === currentId) : null)
-
+    const user = JSON.parse(localStorage.getItem("profile"))
+    
     useEffect(()=> {
         if(post){
             setPostData(post)
@@ -30,11 +30,19 @@ const Form = ({currentId, setCurrentId}) => {
     const handleSubmit = (e) => {
         e.preventDefault()
         if(currentId){
-            dispatch(updatePost(currentId, postData))
+            dispatch(updatePost(currentId, {...postData, name: user?.result?.name}))
         } else {
-            dispatch(createPost(postData))
+            dispatch(createPost({...postData, name: user?.result?.name}))
         }
         handleClear()
+    }
+
+    if(!user?.result?.name){
+        return (
+            <Paper>
+                <Typography variant="h6" align="center">Please Sign in to create, edit or like posts</Typography>
+            </Paper>
+        )
     }
 
     const handleClear = () => {
@@ -46,14 +54,6 @@ const Form = ({currentId, setCurrentId}) => {
         <Paper>
             <form className={classes.form} autoComplete="off" noValidate onSubmit={handleSubmit}>
                 <Typography variant="h6">{currentId ? "Editing" : "Creating"} Post</Typography>
-                <TextField 
-                    name="creator" 
-                    variant="outlined" 
-                    label="Creator" 
-                    fullWidth
-                    value={postData.creator}
-                    onChange={(e) => setPostData({...postData, creator: e.target.value})}    
-                />
                 <TextField 
                     name="title" 
                     variant="outlined" 

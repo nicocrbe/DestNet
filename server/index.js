@@ -4,6 +4,7 @@ const express = require("express")
 const bodyParser = require("body-parser")
 const cors = require("cors")
 const postRouter = require("./routes/posts")
+const userRouter = require("./routes/users")
 
 const app = express()
 app.use(bodyParser.json({limit: "40mb", extended: true}))
@@ -11,6 +12,7 @@ app.use(bodyParser.urlencoded({limit: "40mb", extended: true}))
 app.use(cors())
 
 app.use("/posts", postRouter)
+app.use("/users", userRouter)
 
 const PORT = process.env.PORT || 3001
 const server = app.listen(PORT, ()=> {

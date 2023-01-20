@@ -5,22 +5,39 @@ import useStyles from "./styles"
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {useDispatch} from "react-redux"
 import Input from "./Input";
-import { useNavigate, redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import {signin,signup} from "../../actions/auth"
+import jwt_decode from "jwt-decode"
+
+
+const initialForm = {
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
+}
 
 const Auth = ()=> {
 
     const classes = useStyles()
     const [showPassword, setShowPassword] = useState(false)
     const [isSignup, setIsSignup] = useState(true)
+    const [formData, setFormData] = useState(initialForm)
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const handleSubmit = ()=> {
-
+    const handleSubmit = (e)=> {
+        e.preventDefault()
+        if(isSignup) {
+            dispatch(signup(formData, navigate))
+        }else{
+            dispatch(signin(formData, navigate))
+        }
     }
 
     const handleChange = (e)=> {
-        
+        setFormData({...formData, [e.target.name]: e.target.value})
     }
 
     const handleShowPassword = ()=> {
@@ -31,17 +48,23 @@ const Auth = ()=> {
         setIsSignup(!isSignup)
         setShowPassword(false)
     }
-   
+
+    const getGoogleUser = async(credential) => {
+        const decoded = await jwt_decode(credential)
+        return decoded
+    }
+
     const onGoogleAuthSuccess = async(res)=> {
+
+        const decodedUser = await getGoogleUser(res?.credential)
 
         try {
             dispatch({
                 type: "AUTH",
-                data: res
+                data: {result: decodedUser, credential: res?.credential}
             })
         
         navigate("/")
-        window.location.reload(true)
         
         } catch (error) {
             console.error(error)

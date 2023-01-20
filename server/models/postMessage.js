@@ -3,12 +3,13 @@ const {Schema, model} = require("mongoose")
 const postSchema = new Schema({
     title: String,
     message: String,
+    name: String,
     creator: String,
     hashtags: [String],
     file: String,
     likeCounter: {
-        type: Number,
-        default: 0
+        type: [String],
+        default: [],
     },
     cratedAt: {
         type: Date,

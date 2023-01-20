@@ -3,29 +3,36 @@ import { AppBar, Avatar, Button, Toolbar, Typography } from "@mui/material"
 import useStyles from "./styles"
 import destnet from "../../images/logo.png"
 import {Link} from "react-router-dom"
-import jwt_decode from "jwt-decode"
+import { useDispatch } from "react-redux"
+import { useNavigate, useLocation } from "react-router-dom"
+import decode from "jwt-decode"
 
 const NavBar = ()=> {
 
     const classes = useStyles()
-    const [user, setUser] = useState(null)
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile"))?.result)
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const location = useLocation() // Listen route
     
     useEffect(() => {
-        const getGoogleUser = async(credential) => {
-            const decoded = await jwt_decode(credential)
-            return decoded
+        const credential = user?.credential
+
+        if(credential){
+            const decodedCredential = decode(credential)
+            if(decodedCredential.exp * 1000 < new Date().getTime()){
+                handleLogout()
+            }
         }
-        const userLogged = JSON.parse(localStorage.getItem("profile"))
-        if(userLogged){
-            getGoogleUser(userLogged?.credential).then(userResult => {
-                setUser(userResult)
-            })
-        }
-    },[])
+
+        setUser(JSON.parse(localStorage.getItem("profile"))?.result)
+        
+    },[location]) //when route changes, reload
 
     const handleLogout = () => {
+        dispatch({type: "LOGOUT"})
+        navigate("/")
         setUser(null)
-        localStorage.removeItem("profile")
     }
 
     return(

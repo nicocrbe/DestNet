@@ -1,10 +1,11 @@
 const postRouter = require("express").Router()
 const {getPosts, createPost, updatePost, deletePost, likePost} = require("../controllers/posts")
+const auth = require("../middleware/auth")
 
 postRouter.get("/", getPosts)
-postRouter.post("/", createPost)
-postRouter.put("/:id", updatePost)
-postRouter.delete("/:id", deletePost)
-postRouter.put("/:id/likepost", likePost)
+postRouter.post("/", auth, createPost)
+postRouter.put("/:id", auth, updatePost)
+postRouter.delete("/:id", auth, deletePost)
+postRouter.put("/:id/likepost", auth, likePost)
 
 module.exports = postRouter
