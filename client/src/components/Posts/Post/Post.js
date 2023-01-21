@@ -18,15 +18,16 @@ const Post = ({post, setCurrentId}) => {
 
     const Likes = () => {
         if(likeCounter.length > 0){
-            likeCounter.find(like => like===(user?.result?.sub || user?.result?._id))
+            return likeCounter.find(like => like===(user?.result?.sub || user?.result?._id))
             ? (
                 <><ThumbUpAltIcon fontSize="small" />&nbsp;{likeCounter.length > 2 ? `You and ${likeCounter.length -1} others` : `${likeCounter.length} like${likeCounter.length > 1 ? "s" : ""}`}</>
             ):(
-                <><ThumbUpAltOutlinedIcon fontSize="small" />&nbsp;{likeCounter.length}{likeCounter.length === 1 ? "Like" : "Likes"}</>
+                <><ThumbUpAltOutlinedIcon fontSize="small" />&nbsp;{likeCounter.length}{likeCounter.length === 1 ? "Like" : " Likes"}</>
             )
-        }
+        } 
 
         return <><ThumbUpAltOutlinedIcon fontSize="small"/>&nbsp;Like</>
+        
     }
 
     return (
@@ -53,7 +54,6 @@ const Post = ({post, setCurrentId}) => {
                 </CardContent>
                 <CardActions className={classes.cardActions}>
                     <Button size="small" color="primary" disabled={!user?.result}onClick={()=> dispatch(likePost(id))}>
-                        <ThumbUpAltIcon fontSize="small" />
                         <Likes />
                     </Button>
                     {(user?.result?.sub === post?.creator || user?.result?._id === post.creator) && (

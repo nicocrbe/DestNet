@@ -73,6 +73,7 @@ const Auth = ()=> {
     }
 
     const onGoogleAuthError = (error)=> {
+        alert("Google login failed, try again.")
         console.error(error)
     }
 

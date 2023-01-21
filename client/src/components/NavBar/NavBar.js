@@ -11,16 +11,19 @@ const NavBar = ()=> {
 
     const classes = useStyles()
     const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile"))?.result)
+    const credential = JSON.parse(localStorage.getItem("profile"))?.credential
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const location = useLocation() // Listen route
+
     
     useEffect(() => {
-        const credential = user?.credential
-
+        
         if(credential){
             const decodedCredential = decode(credential)
+            
             if(decodedCredential.exp * 1000 < new Date().getTime()){
+                alert("Session expired")
                 handleLogout()
             }
         }

@@ -11,7 +11,7 @@ const signin = async(req,res) => {
         const isPasswordCorrect = await bcrypt.compare(password, existingUser.password)
         if(!isPasswordCorrect) return res.status(400).json({message: "Invalid password"})
 
-        const credential = jwt.sign({email: existingUser.email, id: existingUser._id}, "test", {expiresIn: "1h"})
+        const credential = jwt.sign({email: existingUser.email, id: existingUser._id}, "test", {expiresIn: 10})
 
         res.status(200).json({result: existingUser, credential})
     } catch (error) {
