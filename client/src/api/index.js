@@ -10,8 +10,8 @@ API.interceptors.request.use((req) => {  //Add headers to request
     return req
 })
 
-export const fetchPosts = async() =>{
-    const posts = await API.get("/posts")
+export const fetchPosts = async(page) =>{
+    const posts = await API.get(`/posts?page=${page}`)
     return posts.data
 }
 
@@ -43,4 +43,9 @@ export const signIn = async(formData) => {
 export const signUp = async(formData) => {
     const signupUser = await API.post("/users/signup", formData)
     return signupUser.data
+}
+
+export const fetchPostsBySearch = async(searchQuery) => {
+    const result = await API.get(`/posts/search?searchQuery=${searchQuery.search || "none"}&tags=${searchQuery.tags}`)
+    return result.data
 }

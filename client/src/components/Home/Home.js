@@ -5,10 +5,10 @@ import { MuiChipsInput } from 'mui-chips-input'
 import Posts from "../Posts/Posts"
 import Form from "../Form/Form"
 import useStyles from "./styles"
-import { getPosts } from "../../actions/posts"
+import {getPostsBySearch } from "../../actions/posts"
 import Paginate from "../Pagination"
 import { useDispatch } from "react-redux";
-import {useState, useEffect} from "react"
+import {useState} from "react"
 
 function useQuery() {
     return new URLSearchParams(useLocation().search)
@@ -18,24 +18,20 @@ const Home = ()=> {
 
     const [currentId, setCurrentId] = useState(null)
     const [search,setSearch] = useState("")
-    const [hashtags,setHashtags] = useState([])
+    const [tags,setHashtags] = useState([])
 
     const classes = useStyles()
     const dispatch = useDispatch()
     const query = useQuery()
-    console.log({query})
     const navigate = useNavigate()
     const page = query.get("page") || 1
     
     const searchQuery = query.get("searchQuery")
 
-    useEffect(() => {
-        dispatch(getPosts())
-    }, [currentId, dispatch])
-
     const searchPost = () => {
-        if(search.trim()){
-            //dispatch fetch search post
+        if(search.trim() || tags){
+            dispatch(getPostsBySearch({search, tags: tags.join(",")}))
+            navigate(`/posts/search?searchQuery=${search || "none"}&tags=${tags.join(",")}`)
         } else {
             navigate("/")
         }
@@ -48,11 +44,11 @@ const Home = ()=> {
     }
 
     const handleAddHashtag = (newTag) => {
-        setHashtags([...hashtags,newTag])
+        setHashtags([...tags,newTag])
     }
 
     const handleDeleteHashtag = (tagToDelete) => {
-        setHashtags(hashtags.filter(tag => tag !== tagToDelete))
+        setHashtags(tags.filter(tag => tag !== tagToDelete))
     }
 
     return(
@@ -75,18 +71,20 @@ const Home = ()=> {
                         />
                     <MuiChipsInput 
                         style={{margin: "10px 0"}}
-                        value={hashtags}
+                        value={tags}
                         onAddChip={handleAddHashtag}
                         onDeleteChip={handleDeleteHashtag}
-                        label="Search hashtags"
+                        label="Search tags"
                         variant="outlined"
                     />
                     <Button onClick={searchPost} className={classes.searchButton} variant="contained" color="primary">Search post</Button>
                 </AppBar>
                     <Form currentId={currentId} setCurrentId={setCurrentId}/>
-                    <Paper className={classes.pagination} elevation={6}>
-                        <Paginate />
-                    </Paper>
+                    {(!searchQuery && !tags.length) && (
+                        <Paper className={classes.pagination} elevation={6}>
+                        <Paginate page={page}/>
+                        </Paper>
+                    )}
                 </Grid>
             </Grid>
         </Container>

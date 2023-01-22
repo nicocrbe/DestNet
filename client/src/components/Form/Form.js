@@ -18,7 +18,7 @@ const Form = ({currentId, setCurrentId}) => {
     const classes = useStyles()
     const dispatch = useDispatch()
     const [postData, setPostData] = useState(initialPost)
-    const post = useSelector((state) => currentId ? state.posts.find((p) => p.id === currentId) : null)
+    const post = useSelector((state) => currentId ? state.posts.posts.find((p) => p.id === currentId) : null)
     const user = JSON.parse(localStorage.getItem("profile"))
     
     useEffect(()=> {
@@ -51,7 +51,7 @@ const Form = ({currentId, setCurrentId}) => {
     }
 
     return (
-        <Paper>
+        <Paper elevation={6}>
             <form className={classes.form} autoComplete="off" noValidate onSubmit={handleSubmit}>
                 <Typography variant="h6">{currentId ? "Editing" : "Creating"} Post</Typography>
                 <TextField 
