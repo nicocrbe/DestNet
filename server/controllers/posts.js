@@ -17,6 +17,17 @@ const getPosts = async(req,res) => {
     }
 }
 
+const getPost = async(req,res) => {
+    const {id} = req.params
+    try{
+        const post = await PostMessage.findById(id)
+        res.status(200).json(post)
+    }catch(error){
+        res.status(404).json({message: error.message})
+        console.error(error)
+    }
+}
+
 const getPostsBySearch = async(req,res) => {
     const {searchQuery, tags} = req.query
     
@@ -92,4 +103,4 @@ const likePost = async(req,res) => {
     }
 }
 
-module.exports = {getPosts, createPost, updatePost, deletePost, likePost, getPostsBySearch}
+module.exports = {getPosts, createPost, updatePost, deletePost, likePost, getPostsBySearch, getPost}

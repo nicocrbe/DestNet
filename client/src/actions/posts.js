@@ -1,5 +1,24 @@
 import * as api from "../api"
 
+export const getPost = (id) => async(dispatch) => {
+
+    try{
+        dispatch({
+            type: "START_LOADING"
+        })
+        const data = await api.fetchPost(id)
+        dispatch({
+            type: "FETCH_POST",
+            payload: data
+        })
+        dispatch({
+            type: "END_LOADING"
+        })
+    }catch(error){
+        console.error(error)
+    }
+}
+
 export const getPosts = (page) => async(dispatch) => {
 
     try{
@@ -37,13 +56,11 @@ export const getPostsBySearch = (searchQuery) => async(dispatch) => {
     }
 }
 
-export const createPost = (newPost) => async(dispatch) => {
+export const createPost = (newPost, navigate) => async(dispatch) => {
 
     try{
-        dispatch({
-            type: "START_LOADING"
-        })
         const data = await api.createPost(newPost)
+        navigate(`/posts/${newPost.id}`)
         dispatch({
             type: "CREATE",
             payload: data

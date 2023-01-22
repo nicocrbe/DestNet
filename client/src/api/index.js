@@ -15,6 +15,11 @@ export const fetchPosts = async(page) =>{
     return posts.data
 }
 
+export const fetchPost = async(id) => {
+    const post = await API.get(`/posts/${id}`)
+    return post.data
+}
+
 export const createPost = async(newPost) => {
     const createdPost = await API.post("/posts",newPost)
     return createdPost.data

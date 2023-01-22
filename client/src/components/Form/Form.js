@@ -2,9 +2,9 @@ import React, {useEffect, useState} from "react";
 import { TextField, Button, Typography, Paper } from "@mui/material";
 import useStyles from "./styles"
 import FileBase from "react-file-base64"
-import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { createPost, updatePost } from "../../actions/posts";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 const Form = ({currentId, setCurrentId}) => {
 
@@ -20,6 +20,7 @@ const Form = ({currentId, setCurrentId}) => {
     const [postData, setPostData] = useState(initialPost)
     const post = useSelector((state) => currentId ? state.posts.posts.find((p) => p.id === currentId) : null)
     const user = JSON.parse(localStorage.getItem("profile"))
+    const navigate = useNavigate()
     
     useEffect(()=> {
         if(post){
@@ -32,7 +33,7 @@ const Form = ({currentId, setCurrentId}) => {
         if(currentId){
             dispatch(updatePost(currentId, {...postData, name: user?.result?.name}))
         } else {
-            dispatch(createPost({...postData, name: user?.result?.name}))
+            dispatch(createPost({...postData, name: user?.result?.name}, navigate))
         }
         handleClear()
     }

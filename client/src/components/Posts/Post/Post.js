@@ -1,6 +1,6 @@
 import React from "react";
 import useStyles from "./styles"
-import {Card, CardActions, CardContent, CardMedia, Button, Typography} from "@mui/material"
+import {Card, CardActions, CardContent, CardMedia, Button, Typography, ButtonBase} from "@mui/material"
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -8,6 +8,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import moment from "moment"
 import {useDispatch} from "react-redux"
 import { deletePost, likePost } from "../../../actions/posts";
+import {useNavigate} from "react-router-dom"
 
 const Post = ({post, setCurrentId}) => {
 
@@ -15,6 +16,7 @@ const Post = ({post, setCurrentId}) => {
     const classes = useStyles()
     const dispatch = useDispatch()
     const user = JSON.parse(localStorage.getItem("profile"))
+    const navigate = useNavigate()
 
     const Likes = () => {
         if(likeCounter.length > 0){
@@ -29,9 +31,14 @@ const Post = ({post, setCurrentId}) => {
         return <><ThumbUpAltOutlinedIcon fontSize="small"/>&nbsp;Like</>
         
     }
+    
+    const openPost = () => {
+        navigate(`/posts/${id}`)
+    }
 
     return (
         <Card className={classes.card} raised elevation={6}>
+            <ButtonBase className={classes.cardActions} onClick={openPost}>
             <CardMedia className={classes.media} image={file} title={title} >
                 <div className={classes.overlay}>
                     <Typography variant="h6">{post.name}</Typography>
@@ -52,6 +59,7 @@ const Post = ({post, setCurrentId}) => {
                 <CardContent>
                     <Typography variant="body2" color="textSecondary" component="p" gutterBottom>{message}</Typography>
                 </CardContent>
+                </ButtonBase>
                 <CardActions className={classes.cardActions}>
                     <Button size="small" color="primary" disabled={!user?.result}onClick={()=> dispatch(likePost(id))}>
                         <Likes />
