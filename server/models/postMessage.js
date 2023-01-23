@@ -9,7 +9,11 @@ const postSchema = new Schema({
     file: String,
     likeCounter: {
         type: [String],
-        default: [],
+        default: []
+    },
+    comments: {
+        type: [String],
+        default: []
     },
     cratedAt: {
         type: Date,

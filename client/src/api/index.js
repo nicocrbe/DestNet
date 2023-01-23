@@ -54,3 +54,8 @@ export const fetchPostsBySearch = async(searchQuery) => {
     const result = await API.get(`/posts/search?searchQuery=${searchQuery.search || "none"}&tags=${searchQuery.tags}`)
     return result.data
 }
+
+export const comment = async(value,id) => {
+    const commentedPost = await API.post(`/posts/${id}/commentPost`, {value})
+    return commentedPost.data
+}

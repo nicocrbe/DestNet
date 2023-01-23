@@ -107,4 +107,17 @@ const likePost = async(req,res) => {
     }
 }
 
-module.exports = {getPosts, createPost, updatePost, deletePost, likePost, getPostsBySearch, getPost}
+const commentPost = async(req,res) => {
+    const {id} = req.params
+    const {value} = req.body
+    try {
+        const post = await PostMessage.findById(id)
+        post.comment.push(value)
+        const updatedPost = await PostMessage.findByIdAndUpdate(id, post, {new: true})
+        res.status(201).json(updatedPost)
+    } catch (error) {
+        res.status(500).json({message: error.message})
+    }
+}
+
+module.exports = {getPosts, createPost, updatePost, deletePost, likePost, getPostsBySearch, getPost, commentPost}

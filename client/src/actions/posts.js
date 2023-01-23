@@ -105,3 +105,16 @@ export const likePost = (id) => async(dispatch) => {
         console.error(error)
     }
 }
+
+export const commentPost = (value, id) => async(dispatch) => {
+    try {
+        const response = await api.comment(value,id)
+        dispatch({
+            type: "COMMENT",
+            payload: response
+        })
+        return response.comments
+    } catch (error) {
+        console.error(error)
+    }
+}

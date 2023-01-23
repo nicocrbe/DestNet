@@ -30,6 +30,8 @@ export default (state = {isLoading: true, posts: []},action) => { //The reducer 
             return {...state, posts: state.posts.filter((post) => post.id !== action.payload)}
         case "LIKE":
             return {...state, posts: state.posts.map((post) => post.id === action.payload.id ? action.payload : post)}
+        case "COMMENT":
+            return {...state, posts: state.posts.map((post) => post.id === action.payload.id ? action.payload : post)}
         default:
             return state
     }
