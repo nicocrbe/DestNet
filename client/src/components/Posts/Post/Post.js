@@ -38,8 +38,7 @@ const Post = ({post, setCurrentId}) => {
 
     return (
         <Card className={classes.card} raised elevation={6}>
-            <ButtonBase className={classes.cardActions} onClick={openPost}>
-            <CardMedia className={classes.media} image={file} title={title} >
+            <CardMedia className={classes.media} image={file} title={title} onClick={openPost}>
                 <div className={classes.overlay}>
                     <Typography variant="h6">{post.name}</Typography>
                     <Typography variant="body2">{moment(createdAt).fromNow()}</Typography>
@@ -59,7 +58,6 @@ const Post = ({post, setCurrentId}) => {
                 <CardContent>
                     <Typography variant="body2" color="textSecondary" component="p" gutterBottom>{message}</Typography>
                 </CardContent>
-                </ButtonBase>
                 <CardActions className={classes.cardActions}>
                     <Button size="small" color="primary" disabled={!user?.result}onClick={()=> dispatch(likePost(id))}>
                         <Likes />

@@ -19,10 +19,12 @@ const getPosts = async(req,res) => {
 
 const getPost = async(req,res) => {
     const {id} = req.params
+    
     try{
         const post = await PostMessage.findById(id)
         res.status(200).json(post)
     }catch(error){
+        console.log("Error al get 1 post")
         res.status(404).json({message: error.message})
         console.error(error)
     }
@@ -38,6 +40,7 @@ const getPostsBySearch = async(req,res) => {
         
         res.status(200).json(posts)
     } catch (error) {
+        console.log("Error al consultar por hashtags")
         res.status(404).json({message: error.message})
     }
 }
@@ -50,6 +53,7 @@ const createPost = async(req,res) => {
         await newPost.save()
         res.status(201).json(newPost)
     }catch(error){
+        console.log("Error al crear")
         res.status(409).json({message: error.message})
     }
 }

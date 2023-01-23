@@ -20,12 +20,18 @@ const PostDetails = () => {
   }, [id])
 
   useEffect(() => {
+    
     if(post){
-      dispatch(getPostsBySearch({search: "none", tags: post?.tags.join(",")}))
+      dispatch(getPostsBySearch({search: "none", tags: post?.hashtags.join(",")}))
     }
-  })
+  }, [post])
 
   if(!post) return null
+
+  const recommendedPosts = posts.filter((p) => p.id !== post.id)
+  const openPost = (id) => {
+    navigate(`/posts/${id}`)
+  }
 
   if(isLoading){
     return (
@@ -34,18 +40,12 @@ const PostDetails = () => {
       </Paper>
     )
   }
-
-  const recommendedPosts = posts.filter((p) => p.id !== post.id)
-  const openPost = (id) => {
-    navigate(`/posts/${id}`)
-  }
-
   return (
     <Paper styles={{padding: "20px", borderRadius: "15px"}} elevation={6}>
       <div className={classes.card}>
           <div className={classes.section}>
             <Typography variant="h3" component="h2">{post.title}</Typography>
-            <Typography gutterBottom variant="h6" color="textSecondary" component="h2">{!post.tags ? "" : post.tags.map((tag) => `#${tag} `)}</Typography>
+            <Typography gutterBottom variant="h6" color="textSecondary" component="h2">{post.hashtags.map((tag) => `#${tag} `)}</Typography>
             <Typography gutterBottom variant="body1" component="p">{post.message}</Typography>
             <Typography variant="h6">Created by: {post.name}</Typography>
             <Typography variant="body1">{moment(post?.createdAt).fromNow()}</Typography>
@@ -59,7 +59,7 @@ const PostDetails = () => {
             <img className={classes.media} src={post.file || 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'} alt={post.title} />
           </div>
       </div>
-    {recommendedPosts.length && (
+    {recommendedPosts.length ? (
       <div className={classes.section}>
           <Typography gutterBottom variant="h5">You might also like:</Typography>
           <Divider />
@@ -75,7 +75,7 @@ const PostDetails = () => {
               ))}
           </div>
       </div>
-    )}
+    ) : <Typography variant="h6" gutterBottom>No posts with the same hashtags</Typography>}
     </Paper>
   )
 }
