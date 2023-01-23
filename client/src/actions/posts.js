@@ -60,7 +60,7 @@ export const createPost = (newPost, navigate) => async(dispatch) => {
 
     try{
         const data = await api.createPost(newPost)
-        navigate(`/posts/${newPost.id}`)
+        navigate(`/posts/${data.id}`)
         dispatch({
             type: "CREATE",
             payload: data
