@@ -5,6 +5,7 @@ import NavBar from "./components/NavBar/NavBar";
 import Home from "./components/Home/Home";
 import Auth from "./components/Auth/Auth";
 import PostDetails from "./components/PostDetails/PostDetails"
+import Messenger from "./components/Messenger/Messenger";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const App = ()=> {
@@ -21,6 +22,7 @@ const App = ()=> {
                         <Route path="/posts/search"  element={<Home />} />
                         <Route path="/posts/:id"  element={<PostDetails />} />
                         <Route path="/auth" element={!user ? <Auth /> : <Navigate to="/posts" replace />}/>
+                        <Route path="/messenger" element={!user ? <Auth /> : <Messenger />} />
                     </Routes>
                 </Container>
             </BrowserRouter>

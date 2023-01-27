@@ -4,8 +4,8 @@ export default makeStyles(() => ({
   media: {
     borderRadius: '20px',
     objectFit: 'cover',
-    width: '100%',
-    maxHeight: '600px',
+    width: '800px',
+    maxHeight: '800px',
   },
   card: {
     display: 'flex',
@@ -26,7 +26,9 @@ export default makeStyles(() => ({
     display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px', borderRadius: '15px', height: '39vh',
   },
   commentsOuterContainer: {
-    display: "flex", justifyContent: "space-between",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-around",
   },
   commentsInnerContainer: {
     height: "200px",

@@ -35,8 +35,12 @@ const NavBar = ()=> {
 
     const handleLogout = () => {
         dispatch({type: "LOGOUT"})
-        navigate("/")
         setUser(null)
+        navigate("/")
+    }
+
+    const handleMessenger = () => {
+        navigate("/messenger")
     }
 
     return(
@@ -50,6 +54,7 @@ const NavBar = ()=> {
                     <div className={classes.profile}>
                         <Avatar className={classes.purple} alt={user.name} src={user.picture}>{user.name.charAt(0)}</Avatar>
                         <Typography className={classes.userName} variant="h6">{user.name}</Typography>
+                        <Button variant="contained" className={classes.logout} color="secondary" onClick={handleMessenger}>Messenger</Button>
                         <Button variant="contained" className={classes.logout} color="secondary" onClick={handleLogout}>Logout</Button>
                     </div>
                 ) : (

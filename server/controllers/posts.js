@@ -112,7 +112,7 @@ const commentPost = async(req,res) => {
     const {value} = req.body
     try {
         const post = await PostMessage.findById(id)
-        post.comment.push(value)
+        post.comments.push(value)
         const updatedPost = await PostMessage.findByIdAndUpdate(id, post, {new: true})
         res.status(201).json(updatedPost)
     } catch (error) {
