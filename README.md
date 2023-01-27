@@ -2,14 +2,14 @@
 
 Features:
 
-- Create, update, delete posts
-- Post detail
+- Create, update and delete posts
+- Post details
 - Likes and creation date
 - Authentication
 - Comments
-- Search and pagination
-- Recommended posts
-- TODO: follow feature
+- Search posts by tags/title and pagination
+- Recommended posts by tags
+- TODO: followers feature
 - TODO: chat feature
 
 Technologies:
@@ -19,15 +19,15 @@ Technologies:
 - Node.js (Express)
 - MongoDB (Mongoose)
 - Authentication with Bcrypt and JWT
+- Socket.io
 - Google Auth
 - MaterialUI
 - Backend testing with Jest and Postman
 
-
 # Instructions:
 
 # Client:
-    npm install
+    npm install -f
     npm start
 
 # Server:
