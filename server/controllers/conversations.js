@@ -27,4 +27,16 @@ const getConversations = async(req,res) => {
     }
 }
 
-module.exports = {newConversation, getConversations}
+const getConversationWithTwoUsers = async(req,res) => {
+    const {firstUserId, secondUserId} = req.params
+    try {
+        const conversation = await Conversation.findOne({
+            members: {$all: [firstUserId,secondUserId]}
+        })
+        res.status(200).json(conversation)
+    } catch (error) {
+        res.status(500).json({message: error.message})
+    }
+}
+
+module.exports = {newConversation, getConversations, getConversationWithTwoUsers}

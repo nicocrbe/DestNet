@@ -15,8 +15,8 @@ app.use(cors())
 
 app.use("/posts", postRouter)
 app.use("/users", userRouter)
-app.use("/conversation", conversationsRouter)
-app.use("/message", messageRouter)
+app.use("/conversations", conversationsRouter)
+app.use("/messages", messageRouter)
 
 const PORT = process.env.PORT || 3001
 const server = app.listen(PORT, ()=> {

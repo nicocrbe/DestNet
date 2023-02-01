@@ -8,14 +8,21 @@ const Conversation = ({conversation, currentUser}) => {
   useEffect(() => {
       const friendId = conversation.members.find((member)=> member !== currentUser.id)
       const getUser = async() => {
-          
+          try {
+            const response = await axios.get(`/users/${friendId}`)
+            setUser(response.data)
+            console.log(response)
+          } catch (error) {
+            console.error(error)
+          }
       }
-  }, [])
+      getUser()
+  }, [currentUser,conversation])
 
   return (
     <div className='conversation'>
-      <img className='conversationImg' src="" alt=""/>
-      <span className='conversationName'>John</span>
+      <img className='conversationImg' src="../../../public/logo192.png" alt=""/>
+      <span className='conversationName'>{user?.name}</span>
       </div>
   )
 }
