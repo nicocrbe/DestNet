@@ -1,8 +1,11 @@
-const io = requires("socket.io")(8900, {
+const { Server } = require("socket.io");
+
+const io = new Server(8900, {
     cors: {
-        origin: "http://localhost:3000"
+        origin: "http://localhost:3000",
+        credentials: true
     }
-})
+});
 
 let users = []
 
@@ -26,6 +29,7 @@ io.on("connection", (socket) => {
         addUser(userId,socket.id)
         io.emit("getUsers", users)
     })
+    console.log(users)
 
     //send and get messages
     socket.on("sendMessage", ({senderId, receiverId, text}) => {

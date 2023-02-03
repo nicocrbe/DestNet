@@ -9,7 +9,7 @@ const ChatOnline = ({onlineUsers,currentId,setCurrentChat}) => {
   
   useEffect(()=> {
     const getFriends = async() => {
-      const res = await axios.get("/users")
+      const res = await axios.get("http://localhost:3001/users")
       setFriends(res.data)
     }
     getFriends()
@@ -21,7 +21,7 @@ const ChatOnline = ({onlineUsers,currentId,setCurrentChat}) => {
 
   const handleClick = async(user) => {
     try {
-      const res = await axios.get(`/conversations/find/${currentId}/${user?.id}`)
+      const res = await axios.get(`http://localhost:3001/conversations/find/${currentId}/${user?.id}`)
       setCurrentChat(res.data)
     } catch (error) {
       console.log(error)

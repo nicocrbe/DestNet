@@ -19,7 +19,7 @@ const Post = ({post, setCurrentId}) => {
     const navigate = useNavigate()
     const [likes, setLikes] = useState(likeCounter)
 
-    const userId = user?.result?.sub || user?.result?._id
+    const userId = user?.result?.sub || user?.result?.id
     const hasLikedPost  = likes.find(like => like === userId)
     
 

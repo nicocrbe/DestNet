@@ -9,9 +9,8 @@ const Conversation = ({conversation, currentUser}) => {
       const friendId = conversation.members.find((member)=> member !== currentUser.id)
       const getUser = async() => {
           try {
-            const response = await axios.get(`/users/${friendId}`)
+            const response = await axios.get(`http://localhost:3001/users/${friendId}`)
             setUser(response.data)
-            console.log(response)
           } catch (error) {
             console.error(error)
           }

@@ -22,7 +22,7 @@ const App = ()=> {
                         <Route path="/posts/search"  element={<Home />} />
                         <Route path="/posts/:id"  element={<PostDetails />} />
                         <Route path="/auth" element={!user ? <Auth /> : <Navigate to="/posts" replace />}/>
-                        <Route path="/messenger" element={!user ? <Auth /> : <Messenger />} />
+                        <Route path="/messenger" element={<Messenger />} />
                     </Routes>
                 </Container>
             </BrowserRouter>

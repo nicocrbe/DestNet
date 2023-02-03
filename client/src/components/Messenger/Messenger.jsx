@@ -3,34 +3,35 @@ import axios from "axios"
 import ChatOnline from '../ChatOnline/ChatOnline'
 import Conversation from '../Conversations/Conversation'
 import Message from '../Message/Message'
-import NavBar from '../NavBar/NavBar'
 import "./messenger.css"
 import {io} from "socket.io-client"
 
 const Messenger = () => {
 
-  const currentUser = JSON.parse(localStorage.getItem("profile")?.result)
+  const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem("profile"))?.result)
+  const userId = currentUser?.sub || currentUser?.id
   const [conversations,setConversations] = useState([])
   const [currentChat, setCurrentChat] = useState(null)
   const [messages,setMessages] = useState([])
   const [arrivalMessage, setArrivalMessage] = useState(null)
-  const [onlineUsers, setOnlineUsers] = useState([])
   const [newMessage, setNewMessage] = useState("")
-  const socket = useRef()
+  const socket = io("http://localhost:8900")
   const scrollRef = useRef()
-
-  const getConversations = async() => {
-    try{
-      const res = await axios.get(`/conversations/${currentUser?.id}`)
-      console.log(res)
-    }catch(error){
-      console.error(error)
-    }
-  }
+  let onlineUsers = []
 
   useEffect(() => {
-    socket.current = io("ws://localhost/8900")
-    socket.current.on("getMessage", data=> {
+    socket.emit("addUser", userId)
+    socket.on("getUsers", users=> {
+      users.map(user => {
+        onlineUsers.push(user)
+      }
+      )
+    })
+    console.log(onlineUsers)
+  },[currentUser])
+
+  useEffect(() => {
+    socket.on("getMessage", data=> {
       setArrivalMessage({
         sender: data.senderId,
         text: data.text,
@@ -44,22 +45,24 @@ const Messenger = () => {
       setMessages(prev=> [...prev,arrivalMessage])
   }, [arrivalMessage])
 
-  useEffect(() => {
-    socket.current.emit("addUser", currentUser?.id)
-    socket.current.on("getUsers", users=> {
-      setOnlineUsers(users)
-    })
-  },[currentUser])
+  
 
   useEffect(()=> {
-    const res = getConversations()
-    setConversations(res.data)
-  }, [currentUser])
+    const getConversations = async() => {
+      try{
+        const res = await axios.get(`http://localhost:3001/conversations/${userId}`)
+        setConversations(res.data)
+      }catch(error){
+        console.error(error)
+      }
+    }
+    getConversations()
+  }, [])
 
   useEffect(() => {
     const getMessages = async() => {
       try {
-        const response = await axios.get(`/messages/${currentChat?.id}`)
+        const response = await axios.get(`http://localhost:3001/messages/${currentChat?.id}`)
         setMessages(response.data)
       } catch (error) {
         console.log(error)
@@ -72,21 +75,21 @@ const Messenger = () => {
   const handleSubmit = async(e)=> {
     e.preventDefault()
     const message = {
-      sender: currentUser?.id,
+      sender: userId,
       text: newMessage,
       conversationId: currentChat?.id
     }
     
-    const receiverId = currentChat.members.find(member => member !== currentUser?.id)
+    const receiverId = currentChat.members.find(member => member !== userId)
 
-    socket.current.emit("sendMessage", {
-      senderId: currentUser?.id,
+    socket.emit("sendMessage", {
+      senderId: userId,
       receiverId,
       text: newMessage
     })
 
     try {
-      const response = await axios.post("/messages", message)
+      const response = await axios.post("http://localhost:3001/messages", message)
       setMessages([...messages, response.data])
       setNewMessage("")
     } catch (error) {
@@ -100,12 +103,11 @@ const Messenger = () => {
 
   return (
     <>
-      <NavBar />
       <div className='messenger'>
         <div className="chatMenu">
             <div className="chatMenuWrapper">
               <input placeholder='Search for friends'  className='chatMenuInput'/>
-              {conversations.map((c) => (
+              {conversations?.map((c) => (
                 <div onClick={()=> setCurrentChat(c)}>
                     <Conversation conversation={c} currentUser={currentUser}/>
                 </div> 
@@ -121,7 +123,7 @@ const Messenger = () => {
               <div className="chatBoxTop">
                 {messages.map(m => (
                   <div ref={scrollRef}>
-                      <Message message={m} own={m.senderId === currentUser?.id}/>
+                      <Message message={m} own={m.senderId === userId}/>
                   </div>
                 ))}
               </div>
@@ -141,7 +143,7 @@ const Messenger = () => {
             <div className="chatOnlineWrapper">
               <ChatOnline 
                 onlineUsers={onlineUsers} 
-                currentId={currentUser?.id}
+                currentId={userId}
                 setCurrentChat={setCurrentChat}
                 />
             </div>
