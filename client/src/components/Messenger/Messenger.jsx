@@ -4,31 +4,30 @@ import ChatOnline from '../ChatOnline/ChatOnline'
 import Conversation from '../Conversations/Conversation'
 import Message from '../Message/Message'
 import "./messenger.css"
-import {io} from "socket.io-client"
 
-const Messenger = () => {
 
-  const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem("profile"))?.result)
+const Messenger = ({socket}) => {
+
+  const currentUser = JSON.parse(localStorage.getItem("profile"))?.result
   const userId = currentUser?.sub || currentUser?.id
   const [conversations,setConversations] = useState([])
   const [currentChat, setCurrentChat] = useState(null)
   const [messages,setMessages] = useState([])
   const [arrivalMessage, setArrivalMessage] = useState(null)
   const [newMessage, setNewMessage] = useState("")
-  const socket = io("http://localhost:8900")
-  const scrollRef = useRef()
   let onlineUsers = []
+  const scrollRef = useRef()
 
   useEffect(() => {
     socket.emit("addUser", userId)
-    socket.on("getUsers", users=> {
+    socket.on("getUsers", users => 
       users.map(user => {
-        onlineUsers.push(user)
-      }
-      )
-    })
+        !onlineUsers.includes(user) &&
+          onlineUsers.push(user)
+      })
+    )
     console.log(onlineUsers)
-  },[currentUser])
+  },[socket])
 
   useEffect(() => {
     socket.on("getMessage", data=> {
@@ -38,11 +37,13 @@ const Messenger = () => {
         createdAt: Date.now()
       })
     })
-  },[])
+    console.log({arrivalMessage})
+  },[socket])
 
   useEffect(() => {
     arrivalMessage && currentChat?.members.includes(arrivalMessage.sender) &&
       setMessages(prev=> [...prev,arrivalMessage])
+      console.log({messages})
   }, [arrivalMessage])
 
   
