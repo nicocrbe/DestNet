@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from 'react'
+import React, {useState,useEffect,useRef} from 'react'
 import { getUser } from '../../api/ChatRequest'
 import logo from "../../../public/logo192.png"
 import { getMessages, addMessage } from '../../api/ChatRequest'
@@ -11,6 +11,7 @@ const ChatBox = ({chat,currentUser,setSendMessage, receiveMessage}) => {
   const [userData, setUserData] = useState(null)
   const [messages,setMessages] = useState([])
   const [newMessage, setNewMessage] = useState("")
+  const scroll = useRef()
   
   useEffect(() => {
     const userId = chat?.members?.find((id) => id!==currentUser)
@@ -72,6 +73,10 @@ const ChatBox = ({chat,currentUser,setSendMessage, receiveMessage}) => {
     setSendMessage({...message, receiverId})
   }
 
+  useEffect(()=> {
+    scroll.current?.scrollIntoView({behavior: "smooth"})
+  }, [messages])
+
   return (
     <>
     <div className="ChatBox-container">
@@ -90,7 +95,9 @@ const ChatBox = ({chat,currentUser,setSendMessage, receiveMessage}) => {
         <div className="chat-body">
             {messages.map((message) => (
               <>
-                <div className={message?.sender === currentUser ? "message own" : "message"}>
+                <div ref={scroll} className={message?.sender === currentUser
+                   ? "message own" 
+                   : "message"}>
                   <span>{message.text}</span>
                   <span>{format(message.createdAt)}</span>
                 </div>

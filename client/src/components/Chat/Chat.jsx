@@ -50,6 +50,13 @@ const Chat = () => {
         getConversations()
     },[user])
 
+
+    const checkOnlineStatus = (chat)=> {
+        const chatMember = chat.members.find((member) => member !== user?.id)
+        const online = onlineUsers.find((user)=> user.userId === chatMember)
+        return online ? true : false
+    }
+
   return (
     <div className="Chat">
         <div className="Left-side-chat">
@@ -57,7 +64,7 @@ const Chat = () => {
                 <h2>Chats</h2>
                 <div className="Chat-list">{chats?.map((chat) => (
                     <div onClick={() => setCurrentChat(chat)}>
-                        <Conversation data={chat} currentUserId={userId} />
+                        <Conversation data={chat} currentUserId={userId} online={checkOnlineStatus(chat)}/>
                     </div>    
                 ))}
                 </div>
