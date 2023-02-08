@@ -8,6 +8,7 @@ import PostDetails from "./components/PostDetails/PostDetails"
 import Messenger from "./components/Messenger/Messenger";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import {io} from "socket.io-client"
+import Chat from "./components/Chat/Chat";
 
 const App = ()=> {
 
@@ -24,7 +25,7 @@ const App = ()=> {
                         <Route path="/posts/search"  element={<Home />} />
                         <Route path="/posts/:id"  element={<PostDetails />} />
                         <Route path="/auth" element={!user ? <Auth /> : <Navigate to="/posts" replace />}/>
-                        <Route path="/messenger" element={<Messenger socket={socket} />} />
+                        <Route path="/chat" element={user ? <Chat /> : <Navigate to="/auth" replace/>} />
                     </Routes>
                 </Container>
             </BrowserRouter>

@@ -40,7 +40,7 @@ const NavBar = ()=> {
     }
 
     const handleMessenger = () => {
-        navigate("/messenger")
+        navigate("/chat")
     }
 
     return(

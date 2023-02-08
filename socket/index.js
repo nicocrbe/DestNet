@@ -1,49 +1,43 @@
 const { Server } = require("socket.io");
 
-const io = new Server(8900, {
+const io = new Server(8800, {
     cors: {
         origin: "http://localhost:3000",
         credentials: true
     }
 });
 
-let users = []
-
-const addUser = (userId,socketId) => {
-    !users.some(user => user.userId === userId) &&
-        users.push({userId,socketId})
-}
-
-const removeUser = (socketId) => {
-    users = users.filter(user => user.socketId !== socketId)
-}
-
-const getUser = (userId) => {
-    return users.find(user => user.userId === userId)
-}
+let activeUsers = []
 
 io.on("connection", (socket) => {
     //when connect
     console.log("A user connected")
-    socket.on("addUser", userId => {
-        addUser(userId,socket.id)
-        io.emit("getUsers", users)
+    socket.on("new-user-add", newUserId => {
+        if(!activeUsers.some((user) => user?.userId === newUserId)){
+            activeUsers.push({
+                userId: newUserId,
+                socketId: socket.id
+            })
+        }
+        io.emit("get-users", activeUsers)
     })
-    console.log(users)
+    console.log(activeUsers)
 
     //send and get messages
-    socket.on("sendMessage", ({senderId, receiverId, text}) => {
-        const user = getUser(receiverId)
-        io.to(user.socketId).emit("getMessage", {
-            senderId,
-            text
-        })
+    socket.on("send-message", (data) => {
+        const {receiverId} = data
+        const user = activeUsers.find((user) => user.userId === receiverId)
+        console.log("Sending to: " + receiverId)
+
+        if(user){
+            io.to(user.socketId).emit("receive-message", data)
+        }
     })
 
     //when disconnect
     socket.on("disconnect", () => {
         console.log("A user disconnected")
-        removeUser(socket.id)
-        io.emit("getUsers", users)
+        activeUsers = activeUsers.filter((user) => user.socketId !== socket.id)
+        io.emit("get-users", activeUsers)
     })
 })

@@ -1,28 +1,39 @@
-import axios from 'axios'
 import React, {useState, useEffect} from 'react'
-import "./conversation.css"
+import { getUser } from '../../api/ChatRequest'
+import logo from "../../../public/logo192.png"
 
-const Conversation = ({conversation, currentUser}) => {
-  const  [user, setUser] = useState(null)
-  
-  useEffect(() => {
-      const friendId = conversation.members.find((member)=> member !== currentUser.id)
-      const getUser = async() => {
-          try {
-            const response = await axios.get(`http://localhost:3001/users/${friendId}`)
-            setUser(response.data)
-          } catch (error) {
-            console.error(error)
-          }
+const Conversation = ({data,currentUserId}) => {
+
+  const [userData, setUserData] = useState(null)
+  useEffect(()=> {
+
+    const userId = data.members.find((id) => id!==currentUserId)
+    const getUserData = async() => {
+      try {
+        const {data} = await getUser(userId)
+        setUserData(data)
+      } catch (error) {
+        console.log(error)
       }
-      getUser()
-  }, [currentUser,conversation])
+    }
+    getUserData()
+  },[])
 
   return (
-    <div className='conversation'>
-      <img className='conversationImg' src="../../../public/logo192.png" alt=""/>
-      <span className='conversationName'>{user?.name}</span>
+    <>
+      <div className="follower conversation">
+        <div>
+          <div className="online-dot">
+            <img src={logo} alt="" className='followerImage' style={{width:"50px", height:"50px"}}/>
+            <div className="name" style={{fontSize:"0.8rem"}}>
+              <span>{userData?.name}</span>
+              <span>Online</span>
+            </div>
+          </div>
+        </div>
       </div>
+      <hr style={{width:"85%", border: "0.1px solid #ececec"}}/>
+    </>
   )
 }
 
